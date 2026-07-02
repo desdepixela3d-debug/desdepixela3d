@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="es">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>Panel de Administración — Desde Pixel a 3D</title>
+    <style>
+      body {
+        background-color: #412402;
+        font-family: Arial, sans-serif;
+        padding: 40px;
+        color: #FAEEDA;
+      }
+      h1 {
+        color: #FAC775;
+        margin-bottom: 10px;
+      }
+      .logout {
+        float: right;
+        background-color: #633806;
+        color: #FAC775;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 14px;
+        text-decoration: none;
+      }
+      .logout:hover {
+        background-color: #854F0B;
+      }
+      .seccion {
+        background-color: #633806;
+        padding: 30px;
+        border-radius: 12px;
+        margin-bottom: 40px;
+      }
+      h2 {
+        color: #FAC775;
+        margin-bottom: 20px;
+      }
+      input, textarea {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 16px;
+        border-radius: 6px;
+        border: none;
+        background-color: #FAEEDA;
+        color: #412402;
+        font-size: 15px;
+        box-sizing: border-box;
+      }
+      button {
+        background-color: #EF9F27;
+        color: #412402;
+        border: none;
+        padding: 12px 30px;
+        font-size: 16px;
+        font-weight: bold;
+        border-radius: 8px;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #FAC775;
+      }
+      .producto {
+        background-color: #854F0B;
+        padding: 16px;
+        border-radius: 8px;
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+      }
+      .producto img {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 6px;
+      }
+      .producto-info {
+        flex: 1;
+      }
+      .producto-info h3 {
+        color: #FAC775;
+        margin: 0 0 6px 0;
+      }
+      .producto-info p {
+        margin: 0;
+        font-size: 14px;
+      }
+      .btnEliminar {
+        background-color: #412402;
+        color: #FAC775;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 14px;
+      }
+      .btnEliminar:hover {
+        background-color: #633806;
+      }
+      .confirmacion {
+        color: #FAC775;
+        margin-top: 16px;
+        display: none;
+      }
+    </style>
+  </head>
+
+  <body>
+
+    <a href="/logout" class="logout">Cerrar sesión</a>
+    <h1>Panel de Administración</h1>
+    <p>Bienvenido, Ariel.</p>
+
+    <!-- Formulario para subir producto -->
+    <div class="seccion">
+      <h2>Subir nuevo producto</h2>
+
+      <input type="text" id="nombre" placeholder="Nombre del producto">
+      <textarea id="descripcion" rows="3" placeholder="Descripción del producto"></textarea>
+      <input type="file" id="foto" accept="image/*">
+      <br><br>
+      <button id="btnSubir">Subir producto</button>
+      <p class="confirmacion" id="confirmacion">✅ Producto subido correctamente.</p>
+    </div>
+
+    <!-- Lista de productos -->
+    <div class="seccion">
+      <h2>Productos cargados</h2>
+      <div id="listaProductos">
+        <p>Cargando productos...</p>
+      </div>
+    </div>
+
+    <script>
+      // Cargar productos al entrar
+      cargarProductos();
+
+      // Subir producto
+      document.getElementById('btnSubir').addEventListener('click', function() {
+        let nombre = document.getElementById('nombre').value.trim();
+        let descripcion = document.getElementById('descripcion').value.trim();
+        let foto = document.getElementById('foto').files[0];
+
+        if (nombre === '' || descripcion === '' || !foto) {
+          alert('Por favor completá todos los campos y seleccioná una foto.');
+          return;
+        }
+
+        let formData = new FormData();
+        formData.append('nombre', nombre);
+        formData.append('descripcion', descripcion);
+        formData.append('foto', foto);
+
+        fetch('/admin/subir', {
+          method: 'POST',
+          body: formData
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          if (data.ok) {
+            document.getElementById('confirmacion').style.display = 'block';
+            document.getElementById('nombre').value = '';
+            document.getElementById('descripcion').value = '';
+            document.getElementById('foto').value = '';
+            cargarProductos();
+            setTimeout(function() {
+              document.getElementById('confirmacion').style.display = 'none';
+            }, 3000);
+          }
+        });
+      });
+
+      // Cargar lista de productos
+      function cargarProductos() {
+        fetch('/admin/productos')
+        .then(function(r) { return r.json(); })
+        .then(function(productos) {
+          let lista = document.getElementById('listaProductos');
+          if (productos.length === 0) {
+            lista.innerHTML = '<p>No hay productos cargados todavía.</p>';
+            return;
+          }
+          lista.innerHTML = '';
+          productos.forEach(function(p) {
+            lista.innerHTML += `
+              <div class="producto">
+                <img src="/static/uploads/${p.foto}" alt="${p.nombre}">
+                <div class="producto-info">
+                  <h3>${p.nombre}</h3>
+                  <p>${p.descripcion}</p>
+                </div>
+                <button class="btnEliminar" onclick="eliminarProducto(${p.id})">Eliminar</button>
+              </div>
+            `;
+          });
+        });
+      }
+
+      // Eliminar producto
+      function eliminarProducto(id) {
+        if (!confirm('¿Seguro que querés eliminar este producto?')) return;
+
+        fetch('/admin/eliminar/' + id, { method: 'DELETE' })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          if (data.ok) cargarProductos();
+        });
+      }
+    </script>
+
+  </body>
+
+</html>
