@@ -1,0 +1,143 @@
+body {
+  background-color: #412402;
+  font-family: Arial, sans-serif;
+  text-align: center;
+  padding: 40px;
+}
+
+h1 {
+  color: #FAC775;
+  font-size: 48px;
+}
+
+p {
+  color: #FAEEDA;
+  font-size: 20px;
+}
+
+header {
+  margin-bottom: 40px;
+}
+
+.galeria {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 30px;
+}
+
+.producto {
+  background-color: #633806;
+  border-radius: 12px;
+  padding: 20px;
+  width: 250px;
+}
+
+.producto img {
+  width: 100%;
+  border-radius: 8px;
+}
+
+.producto h2 {
+  color: #FAC775;
+  font-size: 18px;
+  margin-top: 12px;
+}
+
+.producto p {
+  color: #FAEEDA;
+  font-size: 14px;
+
+}nav {
+  background-color: #633806;
+  padding: 16px;
+  text-align: center;
+  margin-bottom: 30px;
+  border-radius: 8px;
+}
+
+nav a {
+  color: #FAC775;
+  text-decoration: none;
+  font-size: 18px;
+  margin: 0 20px;
+  font-weight: bold;
+}
+
+nav a:hover {
+  color: #FAEEDA;
+  border-bottom: 2px solid #FAC775;
+}
+
+nav a.activo {
+  color: #FAEEDA;
+  border-bottom: 2px solid #FAC775;
+}
+
+.contacto {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.contacto h2 {
+  color: #FAC775;
+  font-size: 28px;
+  margin-bottom: 10px;
+}
+
+.contacto p {
+  color: #FAEEDA;
+  margin-bottom: 30px;
+}
+
+.formulario {
+  background-color: #633806;
+  padding: 30px;
+  border-radius: 12px;
+}
+
+.campo {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.campo label {
+  display: block;
+  color: #FAC775;
+  font-size: 14px;
+  margin-bottom: 6px;
+  font-weight: bold;
+}
+
+.campo input,
+.campo textarea {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  border: none;
+  background-color: #FAEEDA;
+  color: #412402;
+  font-size: 15px;
+  box-sizing: border-box;
+}
+
+button {
+  background-color: #EF9F27;
+  color: #412402;
+  border: none;
+  padding: 12px 30px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #FAC775;
+}
+
+#confirmacion {
+  color: #FAC775;
+  font-size: 16px;
+  margin-top: 20px;
+}

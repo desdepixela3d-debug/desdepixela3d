@@ -29,7 +29,16 @@ with app.app_context():
 
 @app.route('/')
 def inicio():
-    return 'El servidor de Desde Pixel a 3D está funcionando.'
+    productos = Producto.query.all()
+    return render_template('index.html', productos=productos)
+
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
+@app.route('/contacto')
+def contacto():
+    return render_template('contacto.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
